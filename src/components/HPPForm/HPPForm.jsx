@@ -48,7 +48,6 @@ const HPPForm = () => {
     emailAssignedEngineer: '@nexustech.com.ph',
     ccBody: 'PH PPS CS PARTNER MGMT',
     ccEmail: 'phppscss_partnermgmt@hp.com'
-    
   });
 
   const [imagePreviews, setImagePreviews] = useState([]);
@@ -56,14 +55,12 @@ const HPPForm = () => {
 
   const [engineers, setEngineers] = useState([]);
   const [isEditingEngineers, setIsEditingEngineers] = useState(false);
-  //const engineers = ["Engr. Aivan Siquig", "Engr. Bernard Morales", "Engr. Daniel Balanza", "Engr. G'mer Isip", "Engr. Ian Ferrer", "Engr. Juan Paulo D. Kaibigan", "Engr. Jorge A. Pascual", "Engr. Lance Reyes", "Engr. Neil T. Escobido", "Engr. Russel Malate"];
 
   // Fetch engineers from the backend
   useEffect(() => {
     const fetchEngineers = async () => {
       try {
-        const response = await fetch('https://ojt-backend-olive.vercel.app/api/engineers'); //change to your backend server
-      //const response = await fetch('http://127.0.0.1:5000/api/engineers');
+        const response = await fetch('http://127.0.0.1:5000/api/engineers'); //change to your backend server
         const data = await response.json();
         setEngineers(data);
       } catch (error) {
@@ -90,8 +87,7 @@ const HPPForm = () => {
 
   const saveEngineers = async () => {
     try {
-      await fetch('https://ojt-backend-olive.vercel.app/api/engineers', { //change to your backend server
-    //await fetch('http://127.0.0.1:5000/api/engineers', {
+      await fetch('http://127.0.0.1:5000/api/engineers', { //change to your backend server
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ engineers }),
@@ -198,7 +194,6 @@ const HPPForm = () => {
     formDataToSend.append('hasUnitBeenRepaired', formData.hasUnitBeenRepaired);
     formDataToSend.append('repairHistory', formData.repairHistory);
     formDataToSend.append('troubleshootingPerformed', formData.troubleshootingPerformed);
-
     formDataToSend.append('UEFIDiag', formData.UEFIDiag);
     formDataToSend.append('UEFIFailureID', formData.UEFIFailureID);
     formDataToSend.append('exceptionCodes', formData.exceptionCodes);
@@ -216,7 +211,6 @@ const HPPForm = () => {
     formDataToSend.append('emailAssignedEngineer', formData.emailAssignedEngineer);
     formDataToSend.append('ccBody', formData.ccBody);
     formDataToSend.append('ccEmail', formData.ccEmail);
-
     formData.recipients.forEach((recipient, index) => {
       formDataToSend.append(`recipient${index + 1}`, recipient);
     });
@@ -236,8 +230,7 @@ const HPPForm = () => {
     });
 
     try {
-      const response = await fetch('https://ojt-backend-olive.vercel.app/send-email', { //change to your backend server
-    //const response = await fetch('http://127.0.0.1:5000/send-email', {
+      const response = await fetch('http://127.0.0.1:5000/send-email', { //change to your backend server
         method: 'POST',
         body: formDataToSend
       });

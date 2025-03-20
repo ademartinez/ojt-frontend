@@ -30,21 +30,18 @@ const HPPQForm = () => {
     issueDescription: '',
     troubleshootingPerformed: '',
     images: [],
-    
   });
 
   const [imagePreviews, setImagePreviews] = useState([]);
 
   const [engineers, setEngineers] = useState([]);
   const [isEditingEngineers, setIsEditingEngineers] = useState(false);
-  //const engineers = ["Engr. Aivan Siquig", "Engr. Bernard Morales", "Engr. Daniel Balanza", "Engr. G'mer Isip", "Engr. Ian Ferrer", "Engr. Juan Paulo D. Kaibigan", "Engr. Jorge A. Pascual", "Engr. Lance Reyes", "Engr. Neil T. Escobido", "Engr. Russel Malate"];
 
   // Fetch engineers from the backend
   useEffect(() => {
     const fetchEngineers = async () => {
       try {
-        const response = await fetch('https://ojt-backend-olive.vercel.app/api/engineers'); //change to your backend server
-      //const response = await fetch('http://127.0.0.1:5000/api/engineers');
+        const response = await fetch('http://127.0.0.1:5000/api/engineers'); //change to your backend server
         const data = await response.json();
         setEngineers(data);
       } catch (error) {
@@ -71,8 +68,7 @@ const HPPQForm = () => {
 
   const saveEngineers = async () => {
     try {
-      await fetch('https://ojt-backend-olive.vercel.app/api/engineers', { //change to your backend server
-    //await fetch('http://127.0.0.1:5000/api/engineers', {
+      await fetch('http://127.0.0.1:5000/api/engineers', { //change to your backend server
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ engineers }),
@@ -163,7 +159,6 @@ const HPPQForm = () => {
     formDataToSend.append('serialNo', formData.serialNo);
     formDataToSend.append('issueDescription', formData.issueDescription);
     formDataToSend.append('troubleshootingPerformed', formData.troubleshootingPerformed);
-
     formData.recipients.forEach((recipient, index) => {
       formDataToSend.append(`recipient${index + 1}`, recipient);
     });
@@ -176,8 +171,7 @@ const HPPQForm = () => {
     formDataToSend.append('tableData', JSON.stringify(formData.tableData));
 
     try {
-      const response = await fetch('https://ojt-backend-olive.vercel.app/send-email-HPQ', {
-    //const response = await fetch('http://127.0.0.1:5000/send-email-HPQ', {
+      const response = await fetch('http://127.0.0.1:5000/send-email-HPQ', {
         method: 'POST',
         body: formDataToSend
       });
