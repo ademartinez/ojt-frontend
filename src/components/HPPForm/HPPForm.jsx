@@ -1,12 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import styles from './HPPForm.module.css';
 
+const Modal = ({ children }) => {
+  return (
+    <div className={styles.modalOverlay}>
+      <div className={styles.modalContent}>
+        {children}
+      </div>
+    </div>
+  );
+};
+
 const HPPForm = () => {
   const [formData, setFormData] = useState({
     subjectParentRequestID: '',
     subjectPartRequest: '',
-    recipients: [''],
-    ccs: [''],
+    recipients: ['support@nexustech.com.ph', 'tataa@nexustech.com.ph', 'pcnebrija@nexustech.com.ph'],
+    ccs: ['trs-infra@nexustech.com.ph', 'svc@nexustech.com.ph'],
     images: [],
     company: '',
     contact: '',
@@ -35,9 +45,9 @@ const HPPForm = () => {
     suggestedRec: '',
     CSDPAttachment: 'No',
     emailCoordinator: '',
-    emailAssignedEngineer: '',
-    ccBody: '',
-    ccEmail: ''
+    emailAssignedEngineer: '@nexustech.com.ph',
+    ccBody: 'PH PPS CS PARTNER MGMT',
+    ccEmail: 'phppscss_partnermgmt@hp.com'
     
   });
 
@@ -52,7 +62,7 @@ const HPPForm = () => {
   useEffect(() => {
     const fetchEngineers = async () => {
       try {
-        const response = await fetch('/api/engineers');
+        const response = await fetch('http://127.0.0.1:5000/api/engineers'); //change to your backend server
         const data = await response.json();
         setEngineers(data);
       } catch (error) {
@@ -79,7 +89,7 @@ const HPPForm = () => {
 
   const saveEngineers = async () => {
     try {
-      await fetch('/api/engineers', {
+      await fetch('http://127.0.0.1:5000/api/engineers', { //change to your backend server
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ engineers }),
@@ -168,6 +178,8 @@ const HPPForm = () => {
     setDefectivePartCTCodeImagePreviews(updatedPreviews);
   };
 
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     
@@ -224,7 +236,7 @@ const HPPForm = () => {
     });
 
     try {
-      const response = await fetch('http://127.0.0.1:5000/send-email', {
+      const response = await fetch('http://127.0.0.1:5000/send-email', { //change to your backend server
         method: 'POST',
         body: formDataToSend
       });
@@ -341,7 +353,7 @@ const HPPForm = () => {
       </div>
 
       {isEditingEngineers && (
-        <div>
+        <Modal>
           <h3>Edit Engineers</h3>
           {engineers.map((engineer, index) => (
             <div key={index} className={styles.flexRow}>
@@ -355,7 +367,7 @@ const HPPForm = () => {
           ))}
           <button type="button" onClick={handleAddEngineer}>+</button>
           <button type="button" onClick={saveEngineers}>Save</button>
-        </div>
+        </Modal>
       )}
 
       <div>

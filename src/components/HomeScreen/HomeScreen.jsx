@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import HPPForm from '../HPPForm/HPPForm';
 import HPPQForm from '../HPPQForm/HPPQForm';
-import LenovoPForm from '../LenovoPForm/LenovoPForm';
-import LenovoPQForm from '../LenovoPQForm/LenovoPQForm';
+//import LenovoPForm from '../LenovoPForm/LenovoPForm';
+//import LenovoPQForm from '../LenovoPQForm/LenovoPQForm';
 
 const templates = [
   "HP Parts Request",
   "HP Parts Quotation",
-  "Lenovo Parts Request",
-  "Lenovo Parts Quotation",
+ // "Lenovo Parts Request",
+ // "Lenovo Parts Quotation",
 ];
 
 const HomeScreen = () => {
@@ -39,8 +39,8 @@ const HomeScreen = () => {
       {/* Conditionally Render the Selected Form Component */}
       {selectedTemplate === "HP Parts Request" ? <HPPForm /> :
        selectedTemplate === "HP Parts Quotation" ? <HPPQForm /> :
-       selectedTemplate === "Lenovo Parts Request" ? <LenovoPForm /> :
-       selectedTemplate === "Lenovo Parts Quotation" ? <LenovoPQForm /> :
+      // selectedTemplate === "Lenovo Parts Request" ? <LenovoPForm /> :
+      // selectedTemplate === "Lenovo Parts Quotation" ? <LenovoPQForm /> :
        null}
     </div>
   );

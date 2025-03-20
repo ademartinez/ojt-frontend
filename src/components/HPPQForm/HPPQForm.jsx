@@ -1,49 +1,39 @@
 import React, { useState, useEffect } from 'react';
 import styles from './HPPQForm.module.css'; // Importing the CSS module
 
+const Modal = ({ children }) => {
+  return (
+    <div className={styles.modalOverlay}>
+      <div className={styles.modalContent}>
+        {children}
+      </div>
+    </div>
+  );
+};
 
 const HPPQForm = () => {
   const [formData, setFormData] = useState({
+    recipients: ['spareparts@nexustech.com.ph'],
+    ccs: ['svc@nexustech.com.ph', 'trs-infra@nexustech.com.ph'],
     subjectParentRequestID: '',
     subjectPartRequest: '',
-    recipients: [''],
-    ccs: [''],
-    images: [],
     company: '',
     contact: '',
     partRequest: '',
+    sparePartNum: '',
+    tableData: [['', '', '', '']], // Initialize with one empty row
+    CTCodeNum: '',  
     attendingEngineer: '',
     model: '',
     productNo: '',
     serialNo: '',
     issueDescription: '',
-    hasUnitBeenRepaired: 'No',
-    repairHistory: '',
     troubleshootingPerformed: '',
-    defectivePartCTCode: [''],
-    defectivePartCTCodeImage: [],
-    UEFIDiag: 'No',
-    UEFIFailureID: '',
-    exceptionCodes: '',
-    windowsUpdate: 'No',
-    firmwareUpdate: 'No',
-    biosUpdate: 'No',
-    reimaging: 'No',
-    windowsOSImage: 'No',
-    minConfigReset: 'No',
-    WISEAdvisory: 'No',
-    nonHP: 'No',
-    suggestedRec: '',
-    CSDPAttachment: 'No',
-    emailCoordinator: '',
-    emailAssignedEngineer: '',
-    ccBody: '',
-    ccEmail: ''
+    images: [],
     
   });
 
   const [imagePreviews, setImagePreviews] = useState([]);
-  const [defectivePartCTCodeImagePreviews, setDefectivePartCTCodeImagePreviews] = useState([]); // New state for image previews
 
   const [engineers, setEngineers] = useState([]);
   const [isEditingEngineers, setIsEditingEngineers] = useState(false);
@@ -53,7 +43,7 @@ const HPPQForm = () => {
   useEffect(() => {
     const fetchEngineers = async () => {
       try {
-        const response = await fetch('/api/engineers');
+        const response = await fetch('http://127.0.0.1:5000/api/engineers'); //change to your backend server
         const data = await response.json();
         setEngineers(data);
       } catch (error) {
@@ -80,7 +70,7 @@ const HPPQForm = () => {
 
   const saveEngineers = async () => {
     try {
-      await fetch('/api/engineers', {
+      await fetch('http://127.0.0.1:5000/api/engineers', { //change to your backend server
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ engineers }),
@@ -93,7 +83,7 @@ const HPPQForm = () => {
 
   const handleChange = (e, index, field) => {
     const { value } = e.target;
-    if (field === 'subjectParentRequestID' || field === 'subjectPartRequest' || field === 'company' || field === 'contact' || field === 'partRequest' || field === 'attendingEngineer' || field === 'model' || field === 'productNo' || field === 'serialNo' || field === 'issueDescription' || field === 'hasUnitBeenRepaired' || field === 'repairHistory' || field === 'troubleshootingPerformed' || field === 'UEFIDiag' || field === 'UEFIFailureID' || field === 'exceptionCodes' || field === 'windowsUpdate' || field === 'firmwareUpdate' || field === 'biosUpdate' || field === 'reimaging' || field === 'windowsOSImage' || field === 'minConfigReset' || field === 'WISEAdvisory' || field === 'nonHP' || field === 'suggestedRec' || field === 'CSDPAttachment' || field === 'emailCoordinator' || field === 'emailAssignedEngineer' || field === 'ccBody' || field === 'ccEmail') {
+    if (field === 'subjectParentRequestID' || field === 'subjectPartRequest' || field === 'company' || field === 'contact' || field === 'partRequest' || field === 'sparePartNum' || field === 'CTCodeNum' || field === 'attendingEngineer' || field === 'model' || field === 'productNo' || field === 'serialNo' || field === 'issueDescription' || field === 'troubleshootingPerformed' ) {
       setFormData({ ...formData, [field]: value });
     } else {
       const newFieldValues = [...formData[field]];
@@ -113,16 +103,6 @@ const HPPQForm = () => {
     setImagePreviews(newImagePreviews);
   };
 
-  const handleDefectivePartCTCodeImageChange = (e, index) => {
-    const file = e.target.files[0];
-    const updatedImages = [...formData.defectivePartCTCodeImage];
-    updatedImages[index] = file;
-    setFormData({ ...formData, defectivePartCTCodeImage: updatedImages });
-  
-    const updatedPreviews = [...defectivePartCTCodeImagePreviews];
-    updatedPreviews[index] = file ? URL.createObjectURL(file) : null;
-    setDefectivePartCTCodeImagePreviews(updatedPreviews);
-  };
 
   const handleAddField = (field) => {
     const newFieldValues = [...formData[field], ''];
@@ -147,26 +127,20 @@ const HPPQForm = () => {
     setImagePreviews(newImagePreviews);
   };
 
-  const handleAddDefectivePartCTCode = () => {
-    setFormData({
-      ...formData,
-      defectivePartCTCode: [...formData.defectivePartCTCode, ''], // Add a new empty text input
-      defectivePartCTCodeImage: [...formData.defectivePartCTCodeImage, null], // Add a new empty image input
-    });
-    setDefectivePartCTCodeImagePreviews([...defectivePartCTCodeImagePreviews, null]); // Add a new preview placeholder
+  const handleTableChange = (e, rowIndex, cellIndex) => {
+    const newTableData = [...formData.tableData];
+    newTableData[rowIndex][cellIndex] = e.target.value;
+    setFormData({ ...formData, tableData: newTableData });
   };
-
-  const handleRemoveDefectivePartCTCode = (index) => {
-    const updatedCodes = formData.defectivePartCTCode.filter((_, i) => i !== index);
-    const updatedImages = formData.defectivePartCTCodeImage.filter((_, i) => i !== index);
-    const updatedPreviews = defectivePartCTCodeImagePreviews.filter((_, i) => i !== index);
   
-    setFormData({
-      ...formData,
-      defectivePartCTCode: updatedCodes,
-      defectivePartCTCodeImage: updatedImages,
-    });
-    setDefectivePartCTCodeImagePreviews(updatedPreviews);
+  const handleAddTableRow = () => {
+    const newTableData = [...formData.tableData, ['', '', '', '']]; // Add a new empty row
+    setFormData({ ...formData, tableData: newTableData });
+  };
+  
+  const handleRemoveTableRow = (rowIndex) => {
+    const newTableData = formData.tableData.filter((_, index) => index !== rowIndex); // Remove the selected row
+    setFormData({ ...formData, tableData: newTableData });
   };
 
   const handleSubmit = async (e) => {
@@ -179,32 +153,14 @@ const HPPQForm = () => {
     formDataToSend.append('company', formData.company);
     formDataToSend.append('contact', formData.contact);
     formDataToSend.append('partRequest', formData.partRequest);
+    formDataToSend.append('sparePartNum', formData.sparePartNum);
+    formDataToSend.append('CTCodeNum', formData.CTCodeNum);
     formDataToSend.append('attendingEngineer', formData.attendingEngineer);
     formDataToSend.append('model', formData.model);
     formDataToSend.append('productNo', formData.productNo);
     formDataToSend.append('serialNo', formData.serialNo);
     formDataToSend.append('issueDescription', formData.issueDescription);
-    formDataToSend.append('hasUnitBeenRepaired', formData.hasUnitBeenRepaired);
-    formDataToSend.append('repairHistory', formData.repairHistory);
     formDataToSend.append('troubleshootingPerformed', formData.troubleshootingPerformed);
-
-    formDataToSend.append('UEFIDiag', formData.UEFIDiag);
-    formDataToSend.append('UEFIFailureID', formData.UEFIFailureID);
-    formDataToSend.append('exceptionCodes', formData.exceptionCodes);
-    formDataToSend.append('windowsUpdate', formData.windowsUpdate);
-    formDataToSend.append('firmwareUpdate', formData.firmwareUpdate);
-    formDataToSend.append('biosUpdate', formData.biosUpdate);
-    formDataToSend.append('reimaging', formData.reimaging);
-    formDataToSend.append('windowsOSImage', formData.windowsOSImage);
-    formDataToSend.append('minConfigReset', formData.minConfigReset);
-    formDataToSend.append('WISEAdvisory', formData.WISEAdvisory);
-    formDataToSend.append('nonHP', formData.nonHP);
-    formDataToSend.append('suggestedRec', formData.suggestedRec);
-    formDataToSend.append('CSDPAttachment', formData.CSDPAttachment);
-    formDataToSend.append('emailCoordinator', formData.emailCoordinator);
-    formDataToSend.append('emailAssignedEngineer', formData.emailAssignedEngineer);
-    formDataToSend.append('ccBody', formData.ccBody);
-    formDataToSend.append('ccEmail', formData.ccEmail);
 
     formData.recipients.forEach((recipient, index) => {
       formDataToSend.append(`recipient${index + 1}`, recipient);
@@ -215,14 +171,7 @@ const HPPQForm = () => {
     formData.images.forEach((image, index) => {
       formDataToSend.append(`image${index}`, image);
     });
-    formData.defectivePartCTCode.forEach((code, index) => {
-      formDataToSend.append(`defectivePartCTCode${index + 1}`, code);
-    });
-    formData.defectivePartCTCodeImage.forEach((image, index) => {
-      if (image) {
-        formDataToSend.append(`defectivePartCTCodeImage${index}`, image);
-      }
-    });
+    formDataToSend.append('tableData', JSON.stringify(formData.tableData));
 
     try {
       const response = await fetch('http://127.0.0.1:5000/send-email-HPQ', {
@@ -243,7 +192,7 @@ const HPPQForm = () => {
 
   return (
     <form onSubmit={handleSubmit} className={styles.hppForm}>
-      <h2 className={styles.title}>HP Parts Request Email Form</h2>
+      <h2 className={styles.title}>HP Parts Quotation Email Form</h2>
       
       {formData.recipients.map((recipient, index) => (
         <div key={index} className={styles.flexRow}>
@@ -286,7 +235,7 @@ const HPPQForm = () => {
         />
       </div>
       <div>
-        <label>Part Request:</label>
+        <label>Part Quotation:</label>
         <input
           type="text"
           name="subjectPartRequest"
@@ -325,6 +274,67 @@ const HPPQForm = () => {
           required
         />
       </div>
+
+      <div>
+        <label>Spare Part No. (SPN):</label>
+        <input
+          type="text"
+          name="sparePartNum"
+          value={formData.sparePartNum}
+          onChange={(e) => handleChange(e, null, 'sparePartNum')}
+          required
+        />
+      </div>
+
+      <label>Spare Part Number Table:</label>
+      <table className={styles.table}>
+        <thead>
+          <tr>
+            <th>Column 1</th>
+            <th>Column 2</th>
+            <th>Column 3</th>
+            <th>Column 4</th>
+            <th>Actions</th> {/* Add a column for the minus button */}
+          </tr>
+        </thead>
+        <tbody>
+          {formData.tableData && formData.tableData.map((row, rowIndex) => (
+            <tr key={rowIndex}>
+              {row.map((cell, cellIndex) => (
+                <td key={cellIndex}>
+                  <input
+                    type="text"
+                    value={cell}
+                    onChange={(e) => handleTableChange(e, rowIndex, cellIndex)}
+                  />
+                </td>
+              ))}
+              <td>
+                <button
+                  type="button"
+                  onClick={() => handleRemoveTableRow(rowIndex)}
+                  className={styles.removeRowBtn}
+                >
+                  -
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <button type="button" onClick={handleAddTableRow}>Add Row</button>
+
+      <div>
+        <label>CT Code:</label>
+        <input
+          type="text"
+          name="CTCodeNum"
+          value={formData.CTCodeNum}
+          onChange={(e) => handleChange(e, null, 'CTCodeNum')}
+          required
+        />
+      </div>
+
       <div>
         <label>Attending Engineer:</label>
         <select
@@ -342,7 +352,7 @@ const HPPQForm = () => {
       </div>
 
       {isEditingEngineers && (
-        <div>
+        <Modal>
           <h3>Edit Engineers</h3>
           {engineers.map((engineer, index) => (
             <div key={index} className={styles.flexRow}>
@@ -356,7 +366,7 @@ const HPPQForm = () => {
           ))}
           <button type="button" onClick={handleAddEngineer}>+</button>
           <button type="button" onClick={saveEngineers}>Save</button>
-        </div>
+        </Modal>
       )}
 
       <div>
@@ -398,28 +408,7 @@ const HPPQForm = () => {
           required
         />
       </div>
-      <div>
-        <label>Has the unit been repaired for this issue before:</label>
-        <select
-          name="hasUnitBeenRepaired"
-          value={formData.hasUnitBeenRepaired}
-          onChange={(e) => handleChange(e, null, 'hasUnitBeenRepaired')}
-          required
-        >
-          <option value="No">No</option>
-          <option value="Yes">Yes</option>
-        </select>
-      </div>
-      {formData.hasUnitBeenRepaired === 'Yes' && (
-        <div>
-          <label>If yes, please provide repair history (Must be in Bulleted List per Date):</label>
-          <textarea
-            name="repairHistory"
-            value={formData.repairHistory}
-            onChange={(e) => handleChange(e, null, 'repairHistory')}
-          />
-        </div>
-      )}
+
       <div>
         <label>Detailed troubleshooting performed (list in points):</label>
         <textarea
@@ -442,241 +431,6 @@ const HPPQForm = () => {
         </div>
       ))}
       <button type="button" onClick={handleAddImage}>+</button>
-
-      <label>Defective Part CT Code:</label>
-      {formData.defectivePartCTCode.map((code, index) => (
-        <div key={index} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          {/* Text Input */}
-          <input
-            type="text"
-            placeholder={`Defective Part CT Code ${index + 1}`}
-            value={code}
-            onChange={(e) => handleChange(e, index, 'defectivePartCTCode')}
-          />
-
-          {/* Image Upload */}
-          <input
-            type="file"
-            onChange={(e) => handleDefectivePartCTCodeImageChange(e, index)}
-          />
-
-          {/* Image Preview */}
-          {defectivePartCTCodeImagePreviews[index] && (
-            <div>
-              <img
-                src={defectivePartCTCodeImagePreviews[index]}
-                alt={`Defective Part CT Code ${index + 1}`}
-                style={{ marginTop: '10px', maxWidth: '400px', maxHeight: '400px' }}
-              />
-            </div>
-          )}
-
-          {/* Remove Button */}
-          <button type="button" onClick={() => handleRemoveDefectivePartCTCode(index)}>-</button>
-        </div>
-      ))}
-
-      <button type="button" onClick={handleAddDefectivePartCTCode}>+</button>
-      
-      <div>
-        <label>UEFI Diagnostics Performed:</label>
-        <select
-          name="UEFIDiag"
-          value={formData.UEFIDiag}
-          onChange={(e) => handleChange(e, null, 'UEFIDiag')}
-          required
-        >
-          <option value="No">No</option>
-          <option value="Yes">Yes</option>
-        </select>
-      </div>
-
-      <div>
-        <label>If yes, please provide the UEFI Failure ID:</label>
-        <input
-          type="text"
-          name="UEFIFailureID"
-          value={formData.UEFIFailureID}
-          onChange={(e) => handleChange(e, null, 'UEFIFailureID')}
-        />
-      </div>
-
-      <div>
-        <label>If no, (Please share the reason - T/C the use of exception codes):</label>
-        <input
-          type="text"
-          name="exceptionCodes"
-          value={formData.exceptionCodes}
-          onChange={(e) => handleChange(e, null, 'exceptionCodes')}
-        />
-      </div>
-
-      <div>
-        <label>Performed Windows Update: </label>
-        <select
-          name="windowsUpdate"
-          value={formData.windowsUpdate}
-          onChange={(e) => handleChange(e, null, 'windowsUpdate')}
-          required
-        >
-          <option value="No">No</option>
-          <option value="Yes">Yes</option>
-        </select>
-      </div>      
-
-      <div>
-        <label>Performed Firmware/Drivers update: </label>
-        <select
-          name="firmwareUpdate"
-          value={formData.firmwareUpdate}
-          onChange={(e) => handleChange(e, null, 'firmwareUpdate')}
-          required
-        >
-          <option value="No">No</option>
-          <option value="Yes">Yes</option>
-        </select>
-      </div> 
-
-      <div>
-        <label>Performed Bios Update / Crisis Recovery: </label>
-        <select
-          name="biosUpdate"
-          value={formData.biosUpdate}
-          onChange={(e) => handleChange(e, null, 'biosUpdate')}
-          required
-        >
-          <option value="No">No</option>
-          <option value="Yes">Yes</option>
-        </select>
-      </div>
-
-      <div>
-        <label>Performed Reimaging/Reformat/Reinstallation of OS: </label>
-        <select
-          name="reimaging"
-          value={formData.reimaging}
-          onChange={(e) => handleChange(e, null, 'reimaging')}
-          required
-        >
-          <option value="No">No</option>
-          <option value="Yes">Yes</option>
-        </select>
-      </div>
-
-      <div>
-        <label>Windows OS Image: </label>
-        <select
-          name="windowsOSImage"
-          value={formData.windowsOSImage}
-          onChange={(e) => handleChange(e, null, 'windowsOSImage')}
-          required
-        >
-          <option value="No">No</option>
-          <option value="Yes">Yes</option>
-        </select>
-      </div>
-
-      <div>
-        <label>Performed Minimum config / Hard reset: </label>
-        <select
-          name="minConfigReset"
-          value={formData.minConfigReset}
-          onChange={(e) => handleChange(e, null, 'minConfigReset')}
-          required
-        >
-          <option value="No">No</option>
-          <option value="Yes">Yes</option>
-        </select>
-      </div>
-
-      <div>
-        <label>Is there any WISE Advisory: </label>
-        <select
-          name="WISEAdvisory"
-          value={formData.WISEAdvisory}
-          onChange={(e) => handleChange(e, null, 'WISEAdvisory')}
-          required
-        >
-          <option value="No">No</option>
-          <option value="Yes">Yes</option>
-        </select>
-      </div>
-
-      <div>
-        <label>Is there any 3rd Party/Non-HP Part Involved: </label>
-        <select
-          name="nonHP"
-          value={formData.nonHP}
-          onChange={(e) => handleChange(e, null, 'nonHP')}
-          required
-        >
-          <option value="No">No</option>
-          <option value="Yes">Yes</option>
-        </select>
-      </div>
-
-      <div>
-        <label>Suggested Recommendation: </label>
-        <input
-          type="text"
-          name="suggestedRec"
-          value={formData.suggestedRec}
-          onChange={(e) => handleChange(e, null, 'suggestedRec')}
-          required
-        />
-      </div>
-
-      <div>
-        <label>With CSDP attachment: </label>
-        <select
-          name="CSDPAttachment"
-          value={formData.CSDPAttachment}
-          onChange={(e) => handleChange(e, null, 'CSDPAttachment')}
-          required
-        >
-          <option value="No">No</option>
-          <option value="Yes">Yes</option>
-        </select>
-      </div>
-
-      <div>
-        <label>Email Address Coordinator (Handling CSDP): </label>
-        <input
-          type="text"
-          name="emailCoordinator"
-          value={formData.emailCoordinator}
-          onChange={(e) => handleChange(e, null, 'emailCoordinator')}
-        />
-      </div>
-
-      <div>
-        <label>Email Address of Assigned Engineer: </label>
-        <input
-          type="text"
-          name="emailAssignedEngineer"
-          value={formData.emailAssignedEngineer}
-          onChange={(e) => handleChange(e, null, 'emailAssignedEngineer')}
-          required
-        />
-      </div>
-
-      <div>
-        <label>CC: </label>
-        <input
-          type="text"
-          name="ccBody"
-          value={formData.ccBody}
-          onChange={(e) => handleChange(e, null, 'ccBody')}
-          required
-        />
-        <input
-          type="text"
-          name="ccEmail"
-          value={formData.ccEmail}
-          onChange={(e) => handleChange(e, null, 'ccEmail')}
-          required
-        />        
-      </div>
 
       <button type="submit" className={styles.submitBtn}>Submit</button>
     </form>
