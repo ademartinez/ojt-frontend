@@ -62,7 +62,8 @@ const HPPForm = () => {
   useEffect(() => {
     const fetchEngineers = async () => {
       try {
-        const response = await fetch('http://127.0.0.1:5000/api/engineers'); //change to your backend server
+        const response = await fetch('https://ojt-backend-olive.vercel.app/api/engineers'); //change to your backend server
+      //const response = await fetch('http://127.0.0.1:5000/api/engineers');
         const data = await response.json();
         setEngineers(data);
       } catch (error) {
@@ -89,7 +90,8 @@ const HPPForm = () => {
 
   const saveEngineers = async () => {
     try {
-      await fetch('http://127.0.0.1:5000/api/engineers', { //change to your backend server
+      await fetch('https://ojt-backend-olive.vercel.app/api/engineers', { //change to your backend server
+    //await fetch('http://127.0.0.1:5000/api/engineers', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ engineers }),
@@ -178,8 +180,6 @@ const HPPForm = () => {
     setDefectivePartCTCodeImagePreviews(updatedPreviews);
   };
 
-
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     
@@ -236,7 +236,8 @@ const HPPForm = () => {
     });
 
     try {
-      const response = await fetch('http://127.0.0.1:5000/send-email', { //change to your backend server
+      const response = await fetch('https://ojt-backend-olive.vercel.app/send-email', { //change to your backend server
+    //const response = await fetch('http://127.0.0.1:5000/send-email', {
         method: 'POST',
         body: formDataToSend
       });
