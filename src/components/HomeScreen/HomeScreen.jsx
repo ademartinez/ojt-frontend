@@ -13,6 +13,35 @@ const templates = [
 
 const HomeScreen = () => {
   const [selectedTemplate, setSelectedTemplate] = useState('');
+  const [isAuthenticated, setIsAuthenticated] = useState(false); // State to track if the user is authenticated
+  const [password, setPassword] = useState(''); // State to store the entered password
+  const correctPassword = 'deskside'; // Replace with your desired password
+
+  const handleLogin = () => {
+    if (password === correctPassword) {
+      setIsAuthenticated(true);
+    } else {
+      alert('Incorrect password!');
+    }
+  };
+
+  // Render the password prompt if the user is not authenticated
+  if (!isAuthenticated) {
+    return (
+      <div style={{ textAlign: 'center', marginTop: '50px' }}>
+        <h2>Enter Password</h2>
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Enter password"
+        />
+        <button onClick={handleLogin} style={{ marginLeft: '10px' }}>
+          Submit
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div>
