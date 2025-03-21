@@ -18,7 +18,7 @@ const HomeScreen = () => {
 
   const handleLogin = async () => {
     try {
-      const response = await fetch('https://your-backend-url/api/validate-password', {
+      const response = await fetch('https://ojt-backend.onrender.com/api/validate-password', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
