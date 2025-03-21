@@ -15,13 +15,30 @@ const HomeScreen = () => {
   const [selectedTemplate, setSelectedTemplate] = useState('');
   const [isAuthenticated, setIsAuthenticated] = useState(false); // State to track if the user is authenticated
   const [password, setPassword] = useState(''); // State to store the entered password
-  const correctPassword = 'deskside'; // Replace with your desired password
 
-  const handleLogin = () => {
-    if (password === correctPassword) {
-      setIsAuthenticated(true);
-    } else {
-      alert('Incorrect password!');
+  const handleLogin = async () => {
+    try {
+      const response = await fetch('https://your-backend-url/api/validate-password', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ password }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.authenticated) {
+          setIsAuthenticated(true);
+        } else {
+          alert('Incorrect password!');
+        }
+      } else {
+        alert('Incorrect password!');
+      }
+    } catch (error) {
+      console.error('Error validating password:', error);
+      alert('An error occurred. Please try again.');
     }
   };
 
