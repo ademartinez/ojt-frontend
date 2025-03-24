@@ -146,7 +146,7 @@ const HPPQForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    const subject = `Subject: Parent Request ID: ${formData.subjectParentRequestID} Part Request: ${formData.subjectPartRequest}`;
+    const subject = `Parent Request ID: ${formData.subjectParentRequestID} Part Request: ${formData.subjectPartRequest}`;
     
     const formDataToSend = new FormData();
     formDataToSend.append('subject', subject);

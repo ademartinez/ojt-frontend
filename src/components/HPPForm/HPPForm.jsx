@@ -46,8 +46,8 @@ const HPPForm = () => {
     CSDPAttachment: 'No',
     emailCoordinator: '',
     emailAssignedEngineer: '@nexustech.com.ph',
-    ccBody: 'PH PPS CS PARTNER MGMT',
-    ccEmail: 'phppscss_partnermgmt@hp.com'
+    carbonBody: 'PH PPS CS PARTNER MGMT',
+    carbonEmail: 'phppscss_partnermgmt@hp.com'
   });
 
   const [imagePreviews, setImagePreviews] = useState([]);
@@ -102,7 +102,7 @@ const HPPForm = () => {
 
   const handleChange = (e, index, field) => {
     const { value } = e.target;
-    if (field === 'subjectParentRequestID' || field === 'subjectPartRequest' || field === 'company' || field === 'contact' || field === 'partRequest' || field === 'attendingEngineer' || field === 'model' || field === 'productNo' || field === 'serialNo' || field === 'issueDescription' || field === 'hasUnitBeenRepaired' || field === 'repairHistory' || field === 'troubleshootingPerformed' || field === 'UEFIDiag' || field === 'UEFIFailureID' || field === 'exceptionCodes' || field === 'windowsUpdate' || field === 'firmwareUpdate' || field === 'biosUpdate' || field === 'reimaging' || field === 'windowsOSImage' || field === 'minConfigReset' || field === 'WISEAdvisory' || field === 'nonHP' || field === 'suggestedRec' || field === 'CSDPAttachment' || field === 'emailCoordinator' || field === 'emailAssignedEngineer' || field === 'ccBody' || field === 'ccEmail') {
+    if (field === 'subjectParentRequestID' || field === 'subjectPartRequest' || field === 'company' || field === 'contact' || field === 'partRequest' || field === 'attendingEngineer' || field === 'model' || field === 'productNo' || field === 'serialNo' || field === 'issueDescription' || field === 'hasUnitBeenRepaired' || field === 'repairHistory' || field === 'troubleshootingPerformed' || field === 'UEFIDiag' || field === 'UEFIFailureID' || field === 'exceptionCodes' || field === 'windowsUpdate' || field === 'firmwareUpdate' || field === 'biosUpdate' || field === 'reimaging' || field === 'windowsOSImage' || field === 'minConfigReset' || field === 'WISEAdvisory' || field === 'nonHP' || field === 'suggestedRec' || field === 'CSDPAttachment' || field === 'emailCoordinator' || field === 'emailAssignedEngineer' || field === 'carbonBody' || field === 'carbonEmail') {
       setFormData({ ...formData, [field]: value });
     } else {
       const newFieldValues = [...formData[field]];
@@ -181,7 +181,7 @@ const HPPForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    const subject = `Subject: Parent Request ID: ${formData.subjectParentRequestID} Part Request: ${formData.subjectPartRequest}`;
+    const subject = `Parent Request ID: ${formData.subjectParentRequestID} Part Request: ${formData.subjectPartRequest}`;
     
     const formDataToSend = new FormData();
     formDataToSend.append('subject', subject);
@@ -211,8 +211,8 @@ const HPPForm = () => {
     formDataToSend.append('CSDPAttachment', formData.CSDPAttachment);
     formDataToSend.append('emailCoordinator', formData.emailCoordinator);
     formDataToSend.append('emailAssignedEngineer', formData.emailAssignedEngineer);
-    formDataToSend.append('ccBody', formData.ccBody);
-    formDataToSend.append('ccEmail', formData.ccEmail);
+    formDataToSend.append('carbonBody', formData.carbonBody);
+    formDataToSend.append('carbonEmail', formData.carbonEmail);
     formData.recipients.forEach((recipient, index) => {
       formDataToSend.append(`recipient${index + 1}`, recipient);
     });
@@ -672,16 +672,16 @@ const HPPForm = () => {
         <label>CC: </label>
         <input
           type="text"
-          name="ccBody"
-          value={formData.ccBody}
-          onChange={(e) => handleChange(e, null, 'ccBody')}
+          name="carbonBody"
+          value={formData.carbonBody}
+          onChange={(e) => handleChange(e, null, 'carbonBody')}
           required
         />
         <input
           type="text"
-          name="ccEmail"
-          value={formData.ccEmail}
-          onChange={(e) => handleChange(e, null, 'ccEmail')}
+          name="carbonEmail"
+          value={formData.carbonEmail}
+          onChange={(e) => handleChange(e, null, 'carbonEmail')}
           required
         />        
       </div>
