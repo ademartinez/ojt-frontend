@@ -242,6 +242,7 @@ const HPPForm = () => {
       const data = await response.json();
       if (response.ok) {
         alert('Email sent successfully!');
+        window.location.reload(); // Reload the page after pressing OK
       } else {
         alert(`Failed to send email: ${data.message}`);
       }
