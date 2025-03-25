@@ -180,6 +180,7 @@ const HPPForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true); // Set loading state to true
     
     const subject = `Parent Request ID: ${formData.subjectParentRequestID} Part Request: ${formData.subjectPartRequest}`;
     
@@ -246,6 +247,8 @@ const HPPForm = () => {
     } catch (error) {
       console.error('Error sending email:', error);
       alert('An error occurred while sending the email.');
+    } finally {
+      setIsSubmitting(false); // Reset loading state
     }
   };
 
@@ -667,7 +670,7 @@ const HPPForm = () => {
           required
         />
       </div>
-
+    
       <div>
         <label>CC: </label>
         <input
@@ -686,7 +689,20 @@ const HPPForm = () => {
         />        
       </div>
 
-      <button type="submit" className={styles.submitBtn}>Submit</button>
+      <button
+        type="submit"
+        className={styles.submitBtn}
+        disabled={isSubmitting} // Disable button when submitting
+      >
+        {isSubmitting ? 'Submitting...' : 'Submit'}
+      </button>
+
+      {isSubmitting && (
+        <Modal>
+          <p>Submitting...</p>
+        </Modal>
+      )}
+
     </form>
   );
 };
