@@ -181,6 +181,12 @@ const HPPForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Show confirmation dialog before sending the email
+    const userChoice = window.confirm(
+      "Your part request will be sent. Do you want to reset all your inputs after sending?"
+    );
+
     setIsSubmitting(true); // Disable the button by setting isSubmitting to true
 
     const subject = `Parent Request ID: ${formData.subjectParentRequestID} Part Request: ${formData.subjectPartRequest}`;
@@ -242,7 +248,19 @@ const HPPForm = () => {
       const data = await response.json();
       if (response.ok) {
         alert('Email sent successfully!');
-        window.location.reload(); // Reload the page after pressing OK
+
+        if (userChoice) {
+          // Reload the page if the user chooses "Yes"
+          window.location.reload();
+        } else {
+          // Retain all inputs except recipients and ccs
+          setFormData({
+            ...formData,
+            recipients: [''],
+            ccs: [''],
+          });
+        }
+
       } else {
         alert(`Failed to send email: ${data.message}`);
       }
