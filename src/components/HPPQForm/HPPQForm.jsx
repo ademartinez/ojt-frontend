@@ -43,8 +43,8 @@ const HPPQForm = () => {
   useEffect(() => {
     const fetchEngineers = async () => {
       try {
-        //const response = await fetch('https://ojt-backend.onrender.com/api/engineers');
-        const response = await fetch('http://127.0.0.1:5000/api/engineers'); //change to your backend server
+        const response = await fetch('https://ojt-backend.onrender.com/api/engineers');
+        //const response = await fetch('http://127.0.0.1:5000/api/engineers'); //change to your backend server
         const data = await response.json();
         setEngineers(data);
       } catch (error) {
@@ -71,8 +71,8 @@ const HPPQForm = () => {
 
   const saveEngineers = async () => {
     try {
-      //await fetch('https://ojt-backend.onrender.com/api/engineers', {
-      await fetch('http://127.0.0.1:5000/api/engineers', { //change to your backend server
+      await fetch('https://ojt-backend.onrender.com/api/engineers', {
+      //await fetch('http://127.0.0.1:5000/api/engineers', { //change to your backend server
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ engineers }),
@@ -176,8 +176,8 @@ const HPPQForm = () => {
     formDataToSend.append('tableData', JSON.stringify(formData.tableData));
 
     try {
-      //const response = await fetch('https://ojt-backend.onrender.com/send-email-HPQ', {
-      const response = await fetch('http://127.0.0.1:5000/send-email-HPQ', {
+      const response = await fetch('https://ojt-backend.onrender.com/send-email-HPQ', {
+      //const response = await fetch('http://127.0.0.1:5000/send-email-HPQ', {
         method: 'POST',
         body: formDataToSend
       });
