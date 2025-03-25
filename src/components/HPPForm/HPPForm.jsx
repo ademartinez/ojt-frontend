@@ -260,8 +260,8 @@ const HPPForm = () => {
           // Retain all inputs except recipients and ccs
           setFormData({
             ...formData,
-            recipients: [],
-            ccs: [],
+            recipients: [''],
+            ccs: [''],
           });
         }
 

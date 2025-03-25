@@ -202,8 +202,8 @@ const HPPQForm = () => {
           // Retain all inputs except recipients and ccs
           setFormData({
             ...formData,
-            recipients: [],
-            ccs: [],
+            recipients: [''],
+            ccs: [''],
           });
         }
 
