@@ -61,8 +61,8 @@ const HPPForm = () => {
   useEffect(() => {
     const fetchEngineers = async () => {
       try {
-        const response = await fetch('https://ojt-backend.onrender.com/api/engineers');
-        //const response = await fetch('http://127.0.0.1:5000/api/engineers'); //change to your backend server
+        //const response = await fetch('https://ojt-backend.onrender.com/api/engineers');
+        const response = await fetch('http://127.0.0.1:5000/api/engineers'); //change to your backend server
         const data = await response.json();
         setEngineers(data);
       } catch (error) {
@@ -89,8 +89,8 @@ const HPPForm = () => {
 
   const saveEngineers = async () => {
     try {
-      await fetch('https://ojt-backend.onrender.com/api/engineers', {
-      //await fetch('http://127.0.0.1:5000/api/engineers', { //change to your backend server
+      //await fetch('https://ojt-backend.onrender.com/api/engineers', {
+      await fetch('http://127.0.0.1:5000/api/engineers', { //change to your backend server
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ engineers }),
@@ -234,8 +234,8 @@ const HPPForm = () => {
     });
 
     try {
-      const response = await fetch('https://ojt-backend.onrender.com/send-email', {
-      //const response = await fetch('http://127.0.0.1:5000/send-email', { //change to your backend server
+      //const response = await fetch('https://ojt-backend.onrender.com/send-email', {
+      const response = await fetch('http://127.0.0.1:5000/send-email', { //change to your backend server
         method: 'POST',
         body: formDataToSend
       });
@@ -440,20 +440,6 @@ const HPPForm = () => {
           onChange={(e) => handleChange(e, null, 'troubleshootingPerformed')}
         />
       </div>
-      <label>Picture/Images(s): </label>
-      {formData.images.map((_, index) => (
-        <div key={index}>
-          <label>Upload Image {index + 1}:</label>
-          <input type="file" onChange={(e) => handleFileChange(e, index)} required />
-          <button type="button" onClick={() => handleRemoveImage(index)}>-</button>
-          {imagePreviews[index] && (
-            <div>
-              <img src={imagePreviews[index]} alt="Preview" style={{ marginTop: '10px', maxWidth: '400px', maxHeight: '400px' }} />
-            </div>
-          )}
-        </div>
-      ))}
-      <button type="button" onClick={handleAddImage}>+</button>
 
       <label>Defective Part CT Code:</label>
       {formData.defectivePartCTCode.map((code, index) => (
@@ -690,6 +676,21 @@ const HPPForm = () => {
         />        
       </div>
 
+      <label>Picture/Images(s): </label>
+      {formData.images.map((_, index) => (
+        <div key={index}>
+          <label>Upload Image {index + 1}:</label>
+          <input type="file" onChange={(e) => handleFileChange(e, index)} required />
+          <button type="button" onClick={() => handleRemoveImage(index)}>-</button>
+          {imagePreviews[index] && (
+            <div>
+              <img src={imagePreviews[index]} alt="Preview" style={{ marginTop: '10px', maxWidth: '400px', maxHeight: '400px' }} />
+            </div>
+          )}
+        </div>
+      ))}
+      <button type="button" onClick={handleAddImage}>+</button>
+
       <button
         type="submit"
         className={styles.submitBtn}
@@ -697,7 +698,7 @@ const HPPForm = () => {
       >
         {isSubmitting ? 'Submitting...' : 'Submit'}
       </button>    
-      
+
     </form>
   );
 };

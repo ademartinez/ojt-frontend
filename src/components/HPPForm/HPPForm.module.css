@@ -119,3 +119,13 @@
   width: 100%;
 }
 
+.submitBtn:disabled {
+  background-color: gray; /* Set the background color to gray */
+  cursor: not-allowed; /* Change the cursor to indicate the button is disabled */
+  opacity: 0.7; /* Optional: Add some transparency */
+}
+
+.submitBtn:disabled:hover {
+  background-color: gray; /* Ensure the background stays gray */
+}
+
