@@ -55,6 +55,7 @@ const HPPForm = () => {
 
   const [engineers, setEngineers] = useState([]);
   const [isEditingEngineers, setIsEditingEngineers] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false); // New state for submission status
 
   // Fetch engineers from the backend
   useEffect(() => {
@@ -180,8 +181,8 @@ const HPPForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsSubmitting(true); // Set loading state to true
-    
+    setIsSubmitting(true); // Disable the button by setting isSubmitting to true
+
     const subject = `Parent Request ID: ${formData.subjectParentRequestID} Part Request: ${formData.subjectPartRequest}`;
     
     const formDataToSend = new FormData();
@@ -248,7 +249,7 @@ const HPPForm = () => {
       console.error('Error sending email:', error);
       alert('An error occurred while sending the email.');
     } finally {
-      setIsSubmitting(false); // Reset loading state
+      setIsSubmitting(false); // Re-enable the button after submission is complete
     }
   };
 
@@ -670,7 +671,7 @@ const HPPForm = () => {
           required
         />
       </div>
-    
+
       <div>
         <label>CC: </label>
         <input
@@ -692,17 +693,11 @@ const HPPForm = () => {
       <button
         type="submit"
         className={styles.submitBtn}
-        disabled={isSubmitting} // Disable button when submitting
+        disabled={isSubmitting} // Disable the button when isSubmitting is true
       >
         {isSubmitting ? 'Submitting...' : 'Submit'}
-      </button>
-
-      {isSubmitting && (
-        <Modal>
-          <p>Submitting...</p>
-        </Modal>
-      )}
-
+      </button>    
+      
     </form>
   );
 };
