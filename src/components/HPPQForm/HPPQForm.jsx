@@ -148,10 +148,12 @@ const HPPQForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Show confirmation dialog before sending the email
-    const userChoice = window.confirm(
-      "Your part request will be sent. Do you want to reset all your inputs after sending?"
-    );
+    // Prompt the user to confirm sending the email
+    const sendEmailConfirmation = window.confirm("Do you want to send the email?");
+    if (!sendEmailConfirmation) {
+      // If the user cancels, return to the page without sending the email
+      return;
+    }
 
     setIsSubmitting(true); // Disable the button by setting isSubmitting to true
 
@@ -191,18 +193,19 @@ const HPPQForm = () => {
       if (response.ok) {
         alert('Email sent successfully!');
 
-        if (userChoice) {
-          // Reload the page if the user chooses "Yes"
+        // Prompt the user to confirm removing inputs
+        const removeInputsConfirmation = window.confirm("Do you want to reset the inputs?");
+        if (removeInputsConfirmation) {
+          // Reload the page if the user chooses "Ok"
           window.location.reload();
         } else {
           // Retain all inputs except recipients and ccs
           setFormData({
             ...formData,
-            recipients: [''],
-            ccs: [''],
+            recipients: [],
+            ccs: [],
           });
         }
-
 
       } else {
         alert(`Failed to send email: ${data.message}`);
